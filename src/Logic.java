@@ -34,69 +34,72 @@ public class Logic {
         int i = 1;
         stack.pop();
         while (!stack.isEmpty()){
-            currentState = stack.pop();
             System.out.println("step: " + i);
+            currentState = stack.pop();
             currentState.printState();
             System.out.println();
             i++;
         }
     }
 
-    public void BFS(State currentState){
-        int depth = 1;
+    public void  BFS(State currentState){
+        int depth = 0;
+
         Queue<State> queue = new LinkedList<>();
         Set<State> visited = new HashSet<>();
         Map<State, State> path = new HashMap<>();
+
         queue.add(currentState);
-        while(!queue.isEmpty()){
+        while (!queue.isEmpty() && !currentState.isFinal()){
             currentState = queue.poll();
-            if(currentState.isFinal()){
-                printPath(path, currentState);
-                System.out.println("BFS depth: " + depth);
-                break;
-            }
-            if(!visited.contains(currentState)){
-                depth++;
-                visited.add(currentState);
-                List<State> nextStates = currentState.getNextState();
-                for (State state : nextStates){
-                    if (!visited.contains(state)) {
-                        queue.add(state);
-                        path.put(state, currentState);
-                    }
+            visited.add(currentState);
+            List<State> nextStates = currentState.getNextState();
+            for (State state : nextStates){
+                if(state.isFinal()){
+                    path.put(state, currentState);
+                    currentState = state;
+                    break;
+                }
+                if (!visited.contains(state)) {
+                    queue.add(state);
+                    path.put(state, currentState);
+                    depth++;
                 }
             }
         }
-
-
-
+        printPath(path, currentState);
+        System.out.println("Graph size: " + depth);
+        System.out.println("Visited states: " + visited.size());
     }
 
     public void DFS(State currentState){
-        int depth = 1;
+        int depth = 0;
+
         Deque<State> stack = new LinkedList<>();
         Set<State> visited = new HashSet<>();
         Map<State, State> path = new HashMap<>();
+
         stack.push(currentState);
-        while (!stack.isEmpty()){
+        while (!stack.isEmpty() && !currentState.isFinal()){
             currentState = stack.pop();
-            if(currentState.isFinal()){
-                printPath(path, currentState);
-                System.out.println("DFS depth: " + depth);
-                break;
-            }
-            if(!visited.contains(currentState)){
-                visited.add(currentState);
-                List<State> nextStates = currentState.getNextState();
-                for (State state : nextStates){
-                    if (!visited.contains(state)) {
-                        stack.add(state);
-                        path.put(state, currentState);
-                    }
+            visited.add(currentState);
+            List<State> nextStates = currentState.getNextState();
+            for (State state : nextStates){
+                if(state.isFinal()){
+                    path.put(state, currentState);
+                    currentState = state;
+                    break;
                 }
-                depth++;
+                if(!visited.contains(state)){
+                    stack.push(state);
+                    path.put(state, currentState);
+                    depth++;
+                }
             }
         }
+        printPath(path, currentState);
+        System.out.println("Graph size: " + depth);
+        System.out.println("Visited states: " + visited.size());
     }
 
     public void UCS(State currentState){
