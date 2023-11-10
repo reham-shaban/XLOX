@@ -6,7 +6,7 @@ public class Main {
         System.out.print("Choose a level 1,4,6 or 7: ");
         int level = scan.nextInt();
         char[][] grid = Levels.getGrid(level);
-        State s = new State(grid);
+        State s = new State(grid, 0);
 
         System.out.println("Current Grid");
         s.printState();

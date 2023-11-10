@@ -5,11 +5,17 @@ import java.util.Map.Entry;
 public class State {
     char[][] grid;
     int rows, columns;
+    int cost;
 
-    public State(char[][] grid) {
+    public State(char[][] grid, int cost) {
         this.grid = grid;
         this.rows = grid.length;
         this.columns = grid[0].length;
+        this.cost = cost;
+    }
+
+    public int getCost() {
+        return cost;
     }
 
     @Override
@@ -94,7 +100,7 @@ public class State {
         }
 
         // Create and return a new State with the updated grid
-        return new State(newGrid);
+        return new State(newGrid, this.getCost() + 1);
     }
 
     public boolean isFinal(){
