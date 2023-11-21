@@ -25,7 +25,7 @@ public class State {
         if(obj == null || getClass() != obj.getClass())
             return false;
         State otherState = (State) obj;
-        return Arrays.deepEquals(this.grid, otherState.grid);
+        return otherState.hashCode()==this.hashCode();
     }
 
     @Override
@@ -124,4 +124,22 @@ public class State {
         }
     }
 
+    public int calculateHeuristic(){
+        int total = 0;
+        Set<Entry<Integer, Integer>> white_positions = this.checkMoves();
+
+        for (Entry<Integer, Integer> position : white_positions) {
+            int i = position.getKey(), j = position.getValue();
+            if(grid[i+1][j] == ' ')   total++;
+            if(grid[i-1][j] == ' ')   total++;
+            if(grid[i][j+1] == ' ')   total++;
+            if(grid[i][j-1] == ' ')   total++;
+
+        }
+        return total;
+    }
+
+    public int totalCost(){
+        return this.getCost() + this.calculateHeuristic();
+    }
 }

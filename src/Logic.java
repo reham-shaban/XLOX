@@ -127,4 +127,71 @@ public class Logic {
         }
         System.out.println("No solution!");
     }
+
+    public void hillClimbing(State currentState) {
+        int depth = 0;
+
+        PriorityQueue<State> priorityQueue = new PriorityQueue<>(Comparator.comparingInt(State::calculateHeuristic));
+        Set<State> visited = new HashSet<>();
+        Map<State, State> path = new HashMap<>();
+
+        priorityQueue.add(currentState);
+        while (!priorityQueue.isEmpty()) {
+            currentState = priorityQueue.poll();
+            visited.add(currentState);
+            List<State> nextStates = currentState.getNextState();
+            for (State state : nextStates) {
+                if (state.isFinal()) {
+                    path.put(state, currentState);
+                    printPath(path, state);
+                    System.out.println("Graph size: " + depth);
+                    System.out.println("Visited states: " + visited.size());
+                    return;
+                }
+                if (!visited.contains(state)) {
+                    priorityQueue.add(state);
+                    path.put(state, currentState);
+                    depth++;
+                }
+            }
+        }
+        System.out.println("No solution!");
+    }
+
+    public void Astar(State currentState){
+        int depth = 0;
+
+        PriorityQueue<State> priorityQueue = new PriorityQueue<>(Comparator.comparingInt(State::totalCost));
+        Set<State> visited = new HashSet<>();
+        Map<State, State> path = new HashMap<>();
+
+        priorityQueue.add(currentState);
+        while (!priorityQueue.isEmpty()) {
+            currentState = priorityQueue.poll();
+            visited.add(currentState);
+            List<State> nextStates = currentState.getNextState();
+            for (State state : nextStates) {
+                if (state.isFinal()) {
+                    path.put(state, currentState);
+                    printPath(path, state);
+                    System.out.println("Graph size: " + depth);
+                    System.out.println("Visited states: " + visited.size());
+                    return;
+                }
+                if (!visited.contains(state)) {
+                    priorityQueue.add(state);
+                    path.put(state, currentState);
+                    depth++;
+                }
+//                else{
+//                    visited.remove(state);
+//                    priorityQueue.add(state);
+//                    path.put(state, currentState);
+//                }
+            }
+        }
+        System.out.println("No solution!");
+    }
+
 }
+
