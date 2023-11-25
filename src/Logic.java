@@ -1,6 +1,8 @@
 import javax.swing.plaf.PanelUI;
 import java.util.*;
 
+import static java.lang.Math.max;
+
 public class Logic {
     public void UserPlayer(State state){
         Scanner scan = new Scanner(System.in);
@@ -99,59 +101,71 @@ public class Logic {
     }
 
     public void UCS(State currentState){
-        int depth = 0;
+        int depth = currentState.getCost();
 
         PriorityQueue<State> priorityQueue = new PriorityQueue<>(Comparator.comparingInt(State::getCost));
         Set<State> visited = new HashSet<>();
+        Set<State> graph = new HashSet<>();
         Map<State, State> path = new HashMap<>();
 
         priorityQueue.add(currentState);
+        graph.add(currentState);
+
         while (!priorityQueue.isEmpty()) {
             currentState = priorityQueue.poll();
             visited.add(currentState);
             List<State> nextStates = currentState.getNextState();
-            depth++;
             for (State state : nextStates) {
                 if (state.isFinal()) {
+                    depth = max(depth, state.getCost());
                     path.put(state, currentState);
                     printPath(path, state);
-                    System.out.println("Graph depth: " + depth);
+                    System.out.println("Graph size: " + graph.size());
+                    System.out.println("depth: " + depth);
                     System.out.println("Visited states: " + visited.size());
                     return;
                 }
-                if (!visited.contains(state)) {
+                if (!graph.contains(state)) {
                     priorityQueue.add(state);
+                    graph.add(state);
                     path.put(state, currentState);
+                    depth = max(depth, state.getCost());
                 }
             }
         }
         System.out.println("No solution!");
     }
 
+
     public void hillClimbing(State currentState) {
-        int depth = 0;
+        int depth = currentState.getCost();
 
         PriorityQueue<State> priorityQueue = new PriorityQueue<>(Comparator.comparingInt(State::calculateHeuristic));
         Set<State> visited = new HashSet<>();
+        Set<State> graph = new HashSet<>();
         Map<State, State> path = new HashMap<>();
 
         priorityQueue.add(currentState);
-        while (!priorityQueue.isEmpty()) {
+        graph.add(currentState);
+        while(!priorityQueue.isEmpty()){
             currentState = priorityQueue.poll();
             visited.add(currentState);
             List<State> nextStates = currentState.getNextState();
             for (State state : nextStates) {
                 if (state.isFinal()) {
+                    depth = max(depth, state.getCost());
                     path.put(state, currentState);
                     printPath(path, state);
-                    System.out.println("Graph size: " + depth);
+                    System.out.println("Graph size: " + graph.size());
+                    System.out.println("depth: " + depth);
                     System.out.println("Visited states: " + visited.size());
                     return;
                 }
-                if (!visited.contains(state)) {
+                if (!graph.contains(state)) {
                     priorityQueue.add(state);
+                    graph.add(state);
                     path.put(state, currentState);
-                    depth++;
+                    depth = max(depth, state.getCost());
                 }
             }
         }
@@ -159,35 +173,35 @@ public class Logic {
     }
 
     public void Astar(State currentState){
-        int depth = 0;
+        int depth = currentState.getCost();
 
         PriorityQueue<State> priorityQueue = new PriorityQueue<>(Comparator.comparingInt(State::totalCost));
         Set<State> visited = new HashSet<>();
+        Set<State> graph = new HashSet<>();
         Map<State, State> path = new HashMap<>();
 
         priorityQueue.add(currentState);
+        graph.add(currentState);
         while (!priorityQueue.isEmpty()) {
             currentState = priorityQueue.poll();
             visited.add(currentState);
             List<State> nextStates = currentState.getNextState();
             for (State state : nextStates) {
                 if (state.isFinal()) {
+                    depth = max(depth, state.getCost());
                     path.put(state, currentState);
                     printPath(path, state);
-                    System.out.println("Graph size: " + depth);
+                    System.out.println("Graph size: " + graph.size());
+                    System.out.println("depth: " + depth);
                     System.out.println("Visited states: " + visited.size());
                     return;
                 }
                 if (!visited.contains(state)) {
                     priorityQueue.add(state);
+                    graph.add(state);
                     path.put(state, currentState);
-                    depth++;
+                    depth = max(depth, state.getCost());
                 }
-//                else{
-//                    visited.remove(state);
-//                    priorityQueue.add(state);
-//                    path.put(state, currentState);
-//                }
             }
         }
         System.out.println("No solution!");
